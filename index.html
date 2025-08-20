@@ -5,7 +5,6 @@
         <title>Notes App</title>
         <link rel="stylesheet" href="main.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <script src="main.js"></script>
     </head>
     <body>
         <main>
@@ -18,13 +17,25 @@
             <section class="main-content">
                 <header class="main-header">
                     <h2>My Notes</h2>
-                    <button id="add-button"><i class="fa fa-plus"></i> Add Note</button>
+                    <button id="add-button" class="add-button"><i class="fa fa-plus"></i> Add Note</button>
                 </header>
+                <section class="modal-container" id="modal-container">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Add a New Note</h3>
+                            <button class="close-button" id="close-button">&times;</button>
+                        </div>
+                        <input type="text" id="note-title" placeholder="Note Title">
+                        <textarea id="note-input" rows="5" placeholder="Write your note here..."></textarea>
+                        <button id="save-button">Save Note</button>
+                    </div>
+                </section>
                 <hr>
                 <section class="notes-list">
                     <!-- Notes go here -->
                 </section>
             </section>
         </main>
+        <script src="main.js" defer></script>
     </body>
 </html>
