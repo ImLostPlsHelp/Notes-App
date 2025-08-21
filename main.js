@@ -35,6 +35,8 @@ document.addEventListener("DOMContentLoaded", () => {
     addButton.addEventListener("click", () => {
         const modalTitle = document.getElementById("modal-title");
         modalTitle.innerText = "Add a New Note"; //Kita set modal title jadi Add a New Note
+        document.getElementById("note-title").value = ""; //Kosongin input title
+        document.getElementById("note-description").value = ""; //Kosongin input description
         modalContainer.classList.add("show");
     })
 
