@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const saveButton = document.getElementById("save-button");
     const modalContainer = document.getElementById("modal-container");
     const notesList = document.getElementById("notes-list");
+    let editing = null;
     getNotes();
 
     function getNotes() {
@@ -25,12 +26,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 <h3>${note.title}</h3>
                 <p>${note.description}</p>
                 <button class="delete-button" data-note-id="${note.id}">Delete</button>
+                <button class="edit-button" data-note-id="${note.id}">Edit</button>
                 `; //tambahain data-node-id (data-* itu ngebuat custom data atribut) biar kita panggil nanti untuk cari id yang mau kita edit/delete/dll
             notesList.appendChild(noteItem);
         });
     }
 
     addButton.addEventListener("click", () => {
+        const modalTitle = document.getElementById("modal-title");
+        modalTitle.innerText = "Add a New Note"; //Kita set modal title jadi Add a New Note
         modalContainer.classList.add("show");
     })
 
@@ -40,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     saveButton.addEventListener("click", () => {
         const title = document.getElementById("note-title").value;
-        const description = document.getElementById("note-description").value;d
+        const description = document.getElementById("note-description").value;
 
         const newNote = {
             id: Date.now(),
@@ -48,9 +52,18 @@ document.addEventListener("DOMContentLoaded", () => {
             description: description
         }
 
-        const notes = localStorage.getItem("notes") ? JSON.parse(localStorage.getItem("notes")) : [];
-        notes.push(newNote);
-        localStorage.setItem("notes", JSON.stringify(notes));
+        if(editing) {
+            newNote.id = parseInt(editing); //Kalau editing, id di newNote kita ganti ke id dari editing
+            const notes = JSON.parse(localStorage.getItem("notes")) || []; // Kita ambil dulu notes dari local storage terus ubah ke array js
+            const updatedNotes = notes.map(note => note.id === parseInt(editing) ? newNote : note); //Terus kita buat map yang berisi semua notes yang ada, tapi kita cek apakah note id yang sedang kita tmabah sama ata ga
+                                                                                                    // Kalau sama, kita ganti yang idnya sama pakai newNote, kalau ga pakai nilai lama
+            localStorage.setItem("notes", JSON.stringify(updatedNotes)); //Kita set lagi notes ke json string
+            editing = null;
+        } else {
+            const notes = localStorage.getItem("notes") ? JSON.parse(localStorage.getItem("notes")) : [];
+            notes.push(newNote);
+            localStorage.setItem("notes", JSON.stringify(notes));
+        }
 
         document.getElementById("note-title").value = "";
         document.getElementById("note-description").value = "";
@@ -72,6 +85,18 @@ document.addEventListener("DOMContentLoaded", () => {
             const updatedNotes = notes.filter(note => note.id !== parseInt(noteToDelete)); // Kita filter dan buat array baru updatedNotes yang isinya semua note item selain yang sama dengan note.id yang dicari
             localStorage.setItem("notes", JSON.stringify(updatedNotes)); // Kita simpan lagi ke localstorage jadi json string
             getNotes();
+        }
+        if(event.target.classList.contains("edit-button")) {
+            editing = event.target.dataset.noteId;
+            const notes = localStorage.getItem("notes") ? JSON.parse(localStorage.getItem("notes")) : [];
+            const modalTitle = document.getElementById("modal-title");
+            const noteTitle = document.getElementById("note-title");
+            const noteDescription = document.getElementById("note-description");
+            modalTitle.innerText = "Edit Note";
+            noteTitle.value = notes.find(note => note.id === parseInt(editing)).title;
+            noteDescription.value = notes.find(note => note.id === parseInt(editing)).description;
+
+            modalContainer.classList.add("show");
         }
     })
 })
