@@ -1,1 +1,9 @@
 # Create a simple to-do list app that allows users to search, add, edit, and delete items. Use local storage to store the data.
+
+## Key Takeaways
+### 1. State management with editing (let editing).
+If we want to edit things in the future, we can use a variable or state. For this notes app we use a variable called editing that we fill with the note's id if and when we want to edit. We then change the id in newNote with the value of editing after being parsed to Int in the notesList event listener (because note.id was stored in data-note-id (it was turned to string because of html)). we then change the title input and description input with our note's title and description by using find() function. After that, in the saveButton event listener we use an if-else statement to check if editing has a value, if yes we change the newNote.id with the value of editing and take notes from the localStorage after parsing it back to an array. With the notes, we then make a map called updatedNotes that checks each note if they have the id that matches the one in editing, if so we put in newNote, if not we use the old values. Then we put notes back into localStorage after turning it into a json string and clear the value of editing.
+### 2. Event Delegation (Event Listener on notesList)
+We use Event Delegation because each note item will have an edit and delete button, and since they will have the same id, we can't use the normal way of getting the button's id and making an event listener. So we make an event listener on the notes list, and if we click something that contains the class of delete-* or edit-* then it will do their respective commands.
+### 3. How to interact with JSON and local storage
+Usually data stored into local storage will be a JSON object and will be a JSON string, so if we want to interact with it we should always parse it back into javascript
